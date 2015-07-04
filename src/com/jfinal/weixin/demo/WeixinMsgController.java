@@ -12,11 +12,14 @@ import com.jfinal.weixin.sdk.jfinal.MsgController;
 import com.jfinal.weixin.sdk.msg.in.InImageMsg;
 import com.jfinal.weixin.sdk.msg.in.InLinkMsg;
 import com.jfinal.weixin.sdk.msg.in.InLocationMsg;
+import com.jfinal.weixin.sdk.msg.in.InShortVideoMsg;
 import com.jfinal.weixin.sdk.msg.in.InTextMsg;
 import com.jfinal.weixin.sdk.msg.in.InVideoMsg;
 import com.jfinal.weixin.sdk.msg.in.InVoiceMsg;
+import com.jfinal.weixin.sdk.msg.in.event.InCustomEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InFollowEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InLocationEvent;
+import com.jfinal.weixin.sdk.msg.in.event.InMassEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InMenuEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InQrCodeEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InTemplateMsgEvent;
@@ -217,6 +220,21 @@ public class WeixinMsgController extends MsgController {
 	protected void processInTemplateMsgEvent(InTemplateMsgEvent inTemplateMsgEvent) {
 		String status = inTemplateMsgEvent.getStatus();
 		renderOutTextMsg("模板消息是否接收成功：" + status);
+	}
+	
+	// 实现父类抽方法，处理小视频消息
+	protected void processInShortVideoMsg(InShortVideoMsg inShortVideoMsg) {
+		renderOutTextMsg("收到小视频消息，mediaId 为： " + inShortVideoMsg.getMediaId());
+	}
+	
+	// 实现父类抽方法，处理客服消息事件：接入会话（kf_create_session）、关闭会话（kf_close_session）、转接会话（kf_switch_session）
+	protected void processInCustomEvent(InCustomEvent inCustomEvent) {
+		renderOutTextMsg("收到客服务消息事件： " + inCustomEvent.getEvent());
+	}
+	
+	// 实现父类抽方法，处理群发任务结束后的回调事件
+	protected void processInMassEvent(InMassEvent inMassEvent) {
+		renderOutTextMsg("群发消息任务结束");
 	}
 }
 
