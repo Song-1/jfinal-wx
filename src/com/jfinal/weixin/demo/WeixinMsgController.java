@@ -90,10 +90,10 @@ public class WeixinMsgController extends MsgController {
 		// 音乐消息测试
 		else if ("music".equalsIgnoreCase(msgContent) || "音乐".equals(msgContent)) {
 			OutMusicMsg outMsg = new OutMusicMsg(inTextMsg);
-			outMsg.setTitle("When The Stars Go Blue-Venke Knutson");
+			outMsg.setTitle("Day By Day");
 			outMsg.setDescription("建议在 WIFI 环境下流畅欣赏此音乐");
-			outMsg.setMusicUrl("http://www.jfinal.com/When_The_Stars_Go_Blue-Venke_Knutson.mp3");
-			outMsg.setHqMusicUrl("http://www.jfinal.com/When_The_Stars_Go_Blue-Venke_Knutson.mp3");
+			outMsg.setMusicUrl("http://www.jfinal.com/DayByDay-T-ara.mp3");
+			outMsg.setHqMusicUrl("http://www.jfinal.com/DayByDay-T-ara.mp3");
 			outMsg.setFuncFlag(true);
 			render(outMsg);
 		}
@@ -102,8 +102,10 @@ public class WeixinMsgController extends MsgController {
 			outMsg.addNews(
 					"JFinal 宝贝更新喽",
 					"jfinal 宝贝更新喽，我们只看美女 ^_^",
-					"https://mmbiz.qlogo.cn/mmbiz/KJoUl0sqZFRHa3VrmibqAXRfYPNdiamFnpPTOvXoxsFlRoOHbVibGhmHOEUQiboD3qXWszKuzWpibFxsVW1RmNB9hPw/0?wx_fmt=jpeg",
-					"http://mp.weixin.qq.com/s?__biz=MzA4NjM4Mjk2Mw==&mid=211356950&idx=1&sn=6315a1a2848aa8cb0694bf1f4accfb07#rd");
+					"http://mmbiz.qpic.cn/mmbiz/KJoUl0sqZFSnCVT3T5jHLykTvmowHQ2wb4icrT0gcweNXqYOMkLhSlGPRndZhrwqn32gLomRrFGIfibmbmg2iamqg/640?wx_fmt=jpeg&tp=webp&wxfrom=5",
+					"http://mp.weixin.qq.com/s?__biz=MzA4NjM4Mjk2Mw==&mid=400670922&idx=1&sn=cc3a4b948bceea228a9b1f02cb303cff&scene=0#wechat_redirect"
+					);
+			
 			// outMsg.addNews("秀色可餐", "JFinal Weixin 极速开发就是这么爽，有木有 ^_^", "http://mmbiz.qpic.cn/mmbiz/zz3Q6WSrzq2GJLC60ECD7rE7n1cvKWRNFvOyib4KGdic3N5APUWf4ia3LLPxJrtyIYRx93aPNkDtib3ADvdaBXmZJg/0", "http://mp.weixin.qq.com/s?__biz=MjM5ODAwOTU3Mg==&mid=200987822&idx=1&sn=7eb2918275fb0fa7b520768854fb7b80#rd");
 			
 			render(outMsg);
