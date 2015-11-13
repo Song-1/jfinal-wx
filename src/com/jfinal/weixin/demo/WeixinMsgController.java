@@ -22,7 +22,10 @@ import com.jfinal.weixin.sdk.msg.in.event.InLocationEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InMassEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InMenuEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InQrCodeEvent;
+import com.jfinal.weixin.sdk.msg.in.event.InShakearoundUserShakeEvent;
 import com.jfinal.weixin.sdk.msg.in.event.InTemplateMsgEvent;
+import com.jfinal.weixin.sdk.msg.in.event.InVerifyFailEvent;
+import com.jfinal.weixin.sdk.msg.in.event.InVerifySuccessEvent;
 import com.jfinal.weixin.sdk.msg.in.speech_recognition.InSpeechRecognitionResults;
 import com.jfinal.weixin.sdk.msg.out.OutImageMsg;
 import com.jfinal.weixin.sdk.msg.out.OutMusicMsg;
@@ -235,6 +238,22 @@ public class WeixinMsgController extends MsgController {
 	// 实现父类抽方法，处理群发任务结束后的回调事件
 	protected void processInMassEvent(InMassEvent inMassEvent) {
 		renderOutTextMsg("群发消息任务结束");
+	}
+	
+	protected void processInShakearoundUserShakeEvent(InShakearoundUserShakeEvent inShakearoundUserShakeEvent) {
+		renderOutTextMsg("摇一摇：\n" +
+				"uuid = " + inShakearoundUserShakeEvent.getUuid() +
+				"distance = " + inShakearoundUserShakeEvent.getDistance() +
+				"" + inShakearoundUserShakeEvent.getAroundBeaconList()
+				);
+	}
+	
+	protected void processInVerifySuccessEvent(InVerifySuccessEvent inVerifySuccessEvent) {
+		renderOutTextMsg(inVerifySuccessEvent.toString());
+	}
+	
+	protected void processInVerifyFailEvent(InVerifyFailEvent inVerifyFailEvent) {
+		renderOutTextMsg(inVerifyFailEvent.toString());
 	}
 }
 
