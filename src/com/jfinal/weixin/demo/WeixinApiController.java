@@ -47,7 +47,18 @@ public class WeixinApiController extends ApiController {
 		else
 			renderText(apiResult.getErrorMsg());
 	}
-	
+	/**
+	 * 创建公众号菜单
+	 */
+	public void createMenu() {
+		String menu = PropKit.get("menu");
+		System.out.println(menu);
+		ApiResult apiResult = MenuApi.createMenu(menu);
+		if (apiResult.isSucceed())
+			renderText(apiResult.getJson());
+		else
+			renderText(apiResult.getErrorMsg());
+	}
 	/**
 	 * 获取公众号关注用户
 	 */

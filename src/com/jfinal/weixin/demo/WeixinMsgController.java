@@ -6,6 +6,7 @@
 
 package com.jfinal.weixin.demo;
 
+import com.jfinal.kit.HttpKit;
 import com.jfinal.kit.PropKit;
 import com.jfinal.weixin.sdk.api.ApiConfig;
 import com.jfinal.weixin.sdk.jfinal.MsgController;
@@ -41,7 +42,8 @@ import com.jfinal.weixin.sdk.msg.out.OutVoiceMsg;
  */
 public class WeixinMsgController extends MsgController {
 	
-	private static final String helpStr = "\t发送 help 可获得帮助，发送\"视频\" 可获取视频教程，发送 \"美女\" 可看美女，发送 music 可听音乐 ，发送新闻可看JFinal新版本消息。公众号功能持续完善中";
+//	private static final String helpStr = "\t发送 help 可获得帮助，发送\"视频\" 可获取视频教程，发送 \"美女\" 可看美女，发送 music 可听音乐 ，发送新闻可看JFinal新版本消息。公众号功能持续完善中";
+	private static final String helpStr ="";
 	
 	/**
 	 * 如果要支持多公众账号，只需要在此返回各个公众号对应的  ApiConfig 对象即可
@@ -115,7 +117,9 @@ public class WeixinMsgController extends MsgController {
 		}
 		// 其它文本消息直接返回原值 + 帮助提示
 		else {
-			renderOutTextMsg("\t文本消息已成功接收，内容为： " + inTextMsg.getContent() + "\n\n" + helpStr);
+			String json = HttpKit.get("http://www.tuling123.com/openapi/api?key=cc82ddadc055ae93d461746465d5c09e&info="+inTextMsg.getContent());
+			String message = json.substring(json.indexOf("\"text\":\"")+8,json.lastIndexOf("\""));
+			renderOutTextMsg(message +  helpStr);
 		}
 	}
 	
@@ -184,7 +188,7 @@ public class WeixinMsgController extends MsgController {
 	 */
 	protected void processInFollowEvent(InFollowEvent inFollowEvent) {
 		OutTextMsg outMsg = new OutTextMsg(inFollowEvent);
-		outMsg.setContent("感谢关注 JFinal Weixin 极速开发服务号，为您节约更多时间，去陪恋人、家人和朋友 :) \n\n\n " + helpStr);
+		outMsg.setContent("感谢关注 huv微信开发服务号，为您奉献更多的精彩 :)  " + helpStr);
 		// 如果为取消关注事件，将无法接收到传回的信息
 		render(outMsg);
 	}
@@ -203,7 +207,7 @@ public class WeixinMsgController extends MsgController {
 	 */
 	protected void processInLocationEvent(InLocationEvent inLocationEvent) {
 		OutTextMsg outMsg = new OutTextMsg(inLocationEvent);
-		outMsg.setContent("processInLocationEvent() 方法测试成功");
+		outMsg.setContent("huv的微信欢迎你,我可以和你聊天，随便发消息给我吧！\n"+"你的经度:"+inLocationEvent.getLatitude()+";你的纬度:"+inLocationEvent.getLongitude());
 		render(outMsg);
 	}
 	
