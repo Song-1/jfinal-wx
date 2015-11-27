@@ -15,4 +15,8 @@ appSecret=d4624c36b6795d1d99dcf0547af5443d
 #encodingAesKey=yourEncodingAesKey
 
 #菜单
-menu = {"button":[{"type":"click","name":"官网","key":"V1001_TODAY_MUSIC","url":"www.xxtv.com"},{"name":"菜单","sub_button":[{ "type":"click","name":"hello word","key":"V1001_HELLO_WORLD" },{"type":"click","name":"赞一下我们","key":"V1001_GOOD"}]}]}
+menu = {"button":[{"type":"view","name":"官网","url":"http://www.xxtv.online/"},{"name":"菜单","sub_button":[{ "type":"click","name":"hello word","key":"V1001_HELLO_WORLD" },{"type":"click","name":"赞一下我们","key":"V1001_GOOD"},{ "type":"view","name":"官网","url":"http://www.xxtv.online" }]}]}
+#群发消息
+messgae1 ={"filter":{"is_to_all":false,"group_id":"0"},"voice":{"media_id":"Lfmxj0RJO4G9WnVQ5CP04dgOO3v4YjwdfKUKetIEe8Q" },"msgtype":"voice"}
+messgae2 ={"filter":{"is_to_all":false,"group_id":"0"},"text":{"content":""},"msgtype":"text"}
+messgae3 ={"filter":{"is_to_all":false,"group_id":"0"},"image":{"media_id":""},"msgtype":"image"}

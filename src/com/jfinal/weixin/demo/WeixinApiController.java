@@ -1,8 +1,13 @@
 package com.jfinal.weixin.demo;
 
+import java.io.File;
+
 import com.jfinal.kit.PropKit;
 import com.jfinal.weixin.sdk.api.ApiConfig;
 import com.jfinal.weixin.sdk.api.ApiResult;
+import com.jfinal.weixin.sdk.api.GroupsApi;
+import com.jfinal.weixin.sdk.api.MediaApi;
+import com.jfinal.weixin.sdk.api.MediaApi.MediaType;
 import com.jfinal.weixin.sdk.api.MenuApi;
 import com.jfinal.weixin.sdk.api.UserApi;
 import com.jfinal.weixin.sdk.jfinal.ApiController;
@@ -67,5 +72,51 @@ public class WeixinApiController extends ApiController {
 		// TODO 用 jackson 解析结果出来
 		renderText(apiResult.getJson());
 	}
+	/**
+	 * 群发接口
+	 */
+	public void sendAll(){
+		String message = PropKit.get("messgae2");
+		ApiResult apiResult = MessageApi.sendAll(message);
+		renderText(apiResult.getJson());
+	}
+	/**
+	 * 群发信息状态
+	 */
+	public void infoStatus(){
+		String message_id = getPara("messId");
+		ApiResult apiResult = MessageApi.get(message_id);
+		renderText(apiResult.getJson());
+	}
+	/**
+	 * 分组接口
+	 */
+	public void gourp(){
+		ApiResult apiResult = GroupsApi.get();
+		renderText(apiResult.getJson());
+	}
+	/**
+	 * 获取用户信息
+	 */
+	public void getUserInfomation(){
+		String openId = getPara("openId");
+		ApiResult apiResult = UserApi.getUserInfo(openId);
+		renderText(apiResult.getJson());
+	}
+	/**
+	 * 新增其他类型永久素材
+	 */
+	public void addSucai(){
+	File file = new File("C:\\Users\\Administrator\\Music\\张靓颖 - 终于等到你.mp3");
+	ApiResult apiResult = MediaApi.addMaterial(file);
+	renderText(apiResult.getJson());
+	}
+	/**
+	 * 获取音频永久素材列表
+	 */
+	public void getSucai(){
+	ApiResult apiResult = MediaApi.batchGetMaterial(MediaType.VOICE,0,10);
+	renderText(apiResult.getJson());
+	}
+	
 }
-

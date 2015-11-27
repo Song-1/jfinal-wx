@@ -6,9 +6,20 @@
 
 package com.jfinal.weixin.demo;
 
+import java.util.Map;
+
+
+
+
+
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.HttpKit;
 import com.jfinal.kit.PropKit;
 import com.jfinal.weixin.sdk.api.ApiConfig;
+import com.jfinal.weixin.sdk.api.ApiResult;
+import com.jfinal.weixin.sdk.api.UserApi;
 import com.jfinal.weixin.sdk.jfinal.MsgController;
 import com.jfinal.weixin.sdk.msg.in.InImageMsg;
 import com.jfinal.weixin.sdk.msg.in.InLinkMsg;
@@ -43,7 +54,7 @@ import com.jfinal.weixin.sdk.msg.out.OutVoiceMsg;
 public class WeixinMsgController extends MsgController {
 	
 //	private static final String helpStr = "\t发送 help 可获得帮助，发送\"视频\" 可获取视频教程，发送 \"美女\" 可看美女，发送 music 可听音乐 ，发送新闻可看JFinal新版本消息。公众号功能持续完善中";
-	private static final String helpStr ="";
+	private static final String helpStr ="发送 \"美女\"试试";
 	
 	/**
 	 * 如果要支持多公众账号，只需要在此返回各个公众号对应的  ApiConfig 对象即可
@@ -102,14 +113,11 @@ public class WeixinMsgController extends MsgController {
 		else if ("美女".equalsIgnoreCase(msgContent)) {
 			OutNewsMsg outMsg = new OutNewsMsg(inTextMsg);
 			outMsg.addNews(
-					"JFinal 宝贝更新喽",
-					"jfinal 宝贝更新喽，我们只看美女 ^_^",
-					"http://mmbiz.qpic.cn/mmbiz/KJoUl0sqZFSnCVT3T5jHLykTvmowHQ2wb4icrT0gcweNXqYOMkLhSlGPRndZhrwqn32gLomRrFGIfibmbmg2iamqg/640?wx_fmt=jpeg&tp=webp&wxfrom=5",
-					"http://mp.weixin.qq.com/s?__biz=MzA4NjM4Mjk2Mw==&mid=400670922&idx=1&sn=cc3a4b948bceea228a9b1f02cb303cff&scene=0#wechat_redirect"
+					"看美女",
+					"看美女，就上熊熊TV啦！！！！！",
+					"http://img5.duitang.com/uploads/item/201412/05/20141205174557_wFUHC.thumb.700_0.jpeg",
+					"http://mp.weixin.qq.com/s?__biz=MzA4NDU4MTY0OQ==&mid=400964917&idx=1&sn=c78c5a50d02e6a2c1d2860fc63d011be#rd"
 					);
-			
-			// outMsg.addNews("秀色可餐", "JFinal Weixin 极速开发就是这么爽，有木有 ^_^", "http://mmbiz.qpic.cn/mmbiz/zz3Q6WSrzq2GJLC60ECD7rE7n1cvKWRNFvOyib4KGdic3N5APUWf4ia3LLPxJrtyIYRx93aPNkDtib3ADvdaBXmZJg/0", "http://mp.weixin.qq.com/s?__biz=MjM5ODAwOTU3Mg==&mid=200987822&idx=1&sn=7eb2918275fb0fa7b520768854fb7b80#rd");
-			
 			render(outMsg);
 		}
 		else if ("视频教程".equalsIgnoreCase(msgContent) || "视频".equalsIgnoreCase(msgContent)) {
@@ -117,9 +125,13 @@ public class WeixinMsgController extends MsgController {
 		}
 		// 其它文本消息直接返回原值 + 帮助提示
 		else {
+			String openId = inTextMsg.getFromUserName();
+			ApiResult info = UserApi.getUserInfo(openId);
+			Map user = (Map) JSON.parse(info.toString());
+			System.out.println("---------------------"+user.get("nickname")+"-发送了:"+inTextMsg.getContent()+"---------------------");
 			String json = HttpKit.get("http://www.tuling123.com/openapi/api?key=cc82ddadc055ae93d461746465d5c09e&info="+inTextMsg.getContent());
-			String message = json.substring(json.indexOf("\"text\":\"")+8,json.lastIndexOf("\""));
-			renderOutTextMsg(message +  helpStr);
+			Map map = (Map) JSON.parse(json);
+			renderOutTextMsg(map.get("text") .toString());
 		}
 	}
 	
@@ -207,7 +219,13 @@ public class WeixinMsgController extends MsgController {
 	 */
 	protected void processInLocationEvent(InLocationEvent inLocationEvent) {
 		OutTextMsg outMsg = new OutTextMsg(inLocationEvent);
-		outMsg.setContent("huv的微信欢迎你,我可以和你聊天，随便发消息给我吧！\n"+"你的经度:"+inLocationEvent.getLatitude()+";你的纬度:"+inLocationEvent.getLongitude());
+		String jingdu = inLocationEvent.getLatitude();
+		String weidu = inLocationEvent.getLongitude();
+		String api = "http://api.map.baidu.com/geocoder/v2/?ak=rmrRmQs58L06WVGxzBK3d4Ty&location="+jingdu+","+weidu+"&output=json&pois=1";
+		System.out.println(HttpKit.get(api));
+		JSONObject obj = (JSONObject) JSONObject.parse(HttpKit.get(api));
+		String location =obj.getJSONObject("result").get("formatted_address").toString();
+		outMsg.setContent("huv的微信欢迎你,我可以和你聊天，随便发消息给我吧！\n 你的位置大致为："+location +"\n\n"+helpStr);
 		render(outMsg);
 	}
 	
