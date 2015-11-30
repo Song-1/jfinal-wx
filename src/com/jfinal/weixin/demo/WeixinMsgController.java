@@ -6,7 +6,9 @@
 
 package com.jfinal.weixin.demo;
 
+import java.util.List;
 import java.util.Map;
+
 
 
 
@@ -53,8 +55,8 @@ import com.jfinal.weixin.sdk.msg.out.OutVoiceMsg;
  */
 public class WeixinMsgController extends MsgController {
 	
-//	private static final String helpStr = "\t发送 help 可获得帮助，发送\"视频\" 可获取视频教程，发送 \"美女\" 可看美女，发送 music 可听音乐 ，发送新闻可看JFinal新版本消息。公众号功能持续完善中";
-	private static final String helpStr ="发送 \"美女\"试试";
+	private static final String helpStr = "\t机器人优化了一下：现在可以查询，新闻、天气、快递单号、食谱、星座、百科、故事、笑话、火车、成语接龙、飞机、图片。如输入：猫的图片、新闻、深圳的天气、鱼香肉丝、深圳到襄阳的火车、顺丰快递、百科周杰伦、笑话、故事等文字。更多好玩的自己慢慢玩哈";
+//	private static final String helpStr ="发送 \"美女\"试试";
 	
 	/**
 	 * 如果要支持多公众账号，只需要在此返回各个公众号对应的  ApiConfig 对象即可
@@ -93,11 +95,26 @@ public class WeixinMsgController extends MsgController {
 			render(outMsg);
 		}
 		// 图文消息测试
-		else if ("news".equalsIgnoreCase(msgContent) || "新闻".equalsIgnoreCase(msgContent)) {
+		else if ("news".equalsIgnoreCase(msgContent)) {
 			OutNewsMsg outMsg = new OutNewsMsg(inTextMsg);
-			outMsg.addNews("JFinal 2.0 发布,JAVA 极速 WEB+ORM 框架", "本星球第一个极速开发框架", "https://mmbiz.qlogo.cn/mmbiz/KJoUl0sqZFS0fRW68poHoU3v9ulTWV8MgKIduxmzHiamkb3yHia8pCicWVMCaFRuGGMnVOPrrj2qM13u9oTahfQ9A/0?wx_fmt=png", "http://mp.weixin.qq.com/s?__biz=MzA4NjM4Mjk2Mw==&mid=211063163&idx=1&sn=87d54e2992237a3f791f08b5cdab7990#rd");
-			outMsg.addNews("JFinal 1.8 发布,JAVA 极速 WEB+ORM 框架", "现在就加入 JFinal 极速开发世界，节省更多时间去跟女友游山玩水 ^_^", "http://mmbiz.qpic.cn/mmbiz/zz3Q6WSrzq1ibBkhSA1BibMuMxLuHIvUfiaGsK7CC4kIzeh178IYSHbYQ5eg9tVxgEcbegAu22Qhwgl5IhZFWWXUw/0", "http://mp.weixin.qq.com/s?__biz=MjM5ODAwOTU3Mg==&mid=200313981&idx=1&sn=3bc5547ba4beae12a3e8762ababc8175#rd");
-			outMsg.addNews("JFinal 1.6 发布,JAVA 极速 WEB+ORM 框架", "JFinal 1.6 主要升级了 ActiveRecord 插件，本次升级全面支持多数源、多方言、多缓", "http://mmbiz.qpic.cn/mmbiz/zz3Q6WSrzq0fcR8VmNCgugHXv7gVlxI6w95RBlKLdKUTjhOZIHGSWsGvjvHqnBnjIWHsicfcXmXlwOWE6sb39kA/0", "http://mp.weixin.qq.com/s?__biz=MjM5ODAwOTU3Mg==&mid=200121522&idx=1&sn=ee24f352e299b2859673b26ffa4a81f6#rd");
+			outMsg.addNews(
+					"看美女",
+					"看美女，就上熊熊TV啦！！！！！",
+					"http://img5.duitang.com/uploads/item/201412/05/20141205174557_wFUHC.thumb.700_0.jpeg",
+					"http://mp.weixin.qq.com/s?__biz=MzA4NDU4MTY0OQ==&mid=400964917&idx=1&sn=c78c5a50d02e6a2c1d2860fc63d011be#rd"
+					);
+			outMsg.addNews(
+					"看美女",
+					"看美女，就上熊熊TV啦！！！！！",
+					"http://img5.duitang.com/uploads/item/201412/05/20141205174557_wFUHC.thumb.700_0.jpeg",
+					"http://mp.weixin.qq.com/s?__biz=MzA4NDU4MTY0OQ==&mid=400964917&idx=1&sn=c78c5a50d02e6a2c1d2860fc63d011be#rd"
+					);
+			outMsg.addNews(
+					"看美女",
+					"看美女，就上熊熊TV啦！！！！！",
+					"http://img5.duitang.com/uploads/item/201412/05/20141205174557_wFUHC.thumb.700_0.jpeg",
+					"http://mp.weixin.qq.com/s?__biz=MzA4NDU4MTY0OQ==&mid=400964917&idx=1&sn=c78c5a50d02e6a2c1d2860fc63d011be#rd"
+					);
 			render(outMsg);
 		}
 		// 音乐消息测试
@@ -123,18 +140,121 @@ public class WeixinMsgController extends MsgController {
 		else if ("视频教程".equalsIgnoreCase(msgContent) || "视频".equalsIgnoreCase(msgContent)) {
 			renderOutTextMsg("\thttp://pan.baidu.com/s/1nt2zAT7  \t密码:824r");
 		}
+		else if(msgContent.contains("天气")){
+			String json = HttpKit.get("http://www.tuling123.com/openapi/api?key=71370c63f4cd4db53c35771428279aab&info="+inTextMsg.getContent());
+			Map map = (Map) JSON.parse(json);
+			String text = map.get("text").toString();
+			if( text.split(":").length > 1){
+			String location = text.split(":")[0];
+			String [] days = text.split(":")[1].split(";");
+			OutNewsMsg outMsg = new OutNewsMsg(inTextMsg);		
+			outMsg.addNews(
+					location,
+					"看天气",
+					"http://unidust.cn/images/wechat_weather.jpg",
+					"http://m.sm.cn/s?q="+msgContent
+					);
+			outMsg.addNews(
+					days[0],
+					"看天气",
+					image(days[0]),
+					"http://m.sm.cn/s?q="+msgContent
+					);
+			outMsg.addNews(
+					days[1],
+					"看天气",
+					image(days[1]),
+					"http://m.sm.cn/s?q="+msgContent
+					);
+			outMsg.addNews(
+					days[2],
+					"看天气",
+					image(days[2]),
+					"http://m.sm.cn/s?q="+msgContent
+					);
+			render(outMsg);
+			}else{
+			render(text);
+			}
+		}
 		// 其它文本消息直接返回原值 + 帮助提示
 		else {
 			String openId = inTextMsg.getFromUserName();
 			ApiResult info = UserApi.getUserInfo(openId);
 			Map user = (Map) JSON.parse(info.toString());
 			System.out.println("---------------------"+user.get("nickname")+"-发送了:"+inTextMsg.getContent()+"---------------------");
-			String json = HttpKit.get("http://www.tuling123.com/openapi/api?key=cc82ddadc055ae93d461746465d5c09e&info="+inTextMsg.getContent());
+			String json = HttpKit.get("http://www.tuling123.com/openapi/api?key=71370c63f4cd4db53c35771428279aab&info="+inTextMsg.getContent());
 			Map map = (Map) JSON.parse(json);
-			renderOutTextMsg(map.get("text") .toString());
+			int code = Integer.parseInt(map.get("code").toString());
+			switch (code) {
+			//文字类
+			case  100000:
+				renderOutTextMsg(map.get("text") .toString());
+				break;
+			//链接类
+			case 200000:
+				renderOutTextMsg(map.get("text") .toString()+":"+map.get("url") .toString());
+				break;
+			//新闻
+			case 302000:
+				OutNewsMsg outMsg = new OutNewsMsg(inTextMsg);
+				List newsList = (List) JSON.parse(map.get("list").toString());
+				for(int i = 0; i < 4; i++){
+					Map news = (Map) JSON.parse(newsList.get(i).toString());
+					outMsg.addNews(
+							news.get("article") .toString(),
+							news.get("source") .toString(),
+							"http://unidust.cn/images/weixin-xinwen.png",
+							news.get("detailurl") .toString()
+							);
+				}			
+				render(outMsg);
+				break;
+			//菜谱
+			case 308000:
+				OutNewsMsg outMsg2 = new OutNewsMsg(inTextMsg);
+				List newsList2 = (List) JSON.parse(map.get("list").toString());
+				for(int i = 0; i < 4; i++){
+					Map news = (Map) JSON.parse(newsList2.get(i).toString());
+					outMsg2.addNews(
+							news.get("info") .toString(),
+							news.get("name") .toString(),
+							news.get("icon") .toString(),
+							news.get("detailurl") .toString()
+							);
+				}			
+				render(outMsg2);
+				break;
+			default:
+				renderOutTextMsg("R U Kidding Me？");
+				break;	
+			}
+			
 		}
 	}
-	
+	//获取天气图标
+   protected static String image(String weather){
+	   String w= "";
+	   if(weather.contains("晴")){
+		   w = "http://s1.rr.itc.cn/weather/0828/m/Sunny_d.png";
+	   }
+	   if(weather.contains("云")){
+		   w = "http://s1.rr.itc.cn/weather/0828/m/Cloudy_d_s.png";
+	   }
+	   if(weather.contains("云") && weather.contains("晴")){
+		   w = "http://s1.rr.itc.cn/weather/0828/m/SunnyCloudy_d.png";
+	   }
+		if(weather.contains("雪")){
+			w = "http://s1.rr.itc.cn/weather/0828/m/Snow_d.png";
+		}
+		if(weather.contains("阴")){
+			w = "http://s1.rr.itc.cn/weather/0828/m/Overcast_d_s.png";
+		}
+		if(weather.contains("雨")){
+			w = "http://s1.rr.itc.cn/weather/0828/m/LightRain_d_s.png";
+		}
+	   return w;
+   }
 	/**
 	 * 实现父类抽方法，处理图片消息
 	 */
@@ -233,7 +353,13 @@ public class WeixinMsgController extends MsgController {
 	 * 实现父类抽方法，处理自定义菜单事件
 	 */
 	protected void processInMenuEvent(InMenuEvent inMenuEvent) {
-		renderOutTextMsg("processInMenuEvent() 方法测试成功");
+		String key = inMenuEvent.getEventKey();
+		if(key.equals("V1001_HELLO_WORLD")){
+			renderOutTextMsg("Hello,baby!");
+		}else if(key.equals("V1001_GOOD")){
+			renderOutTextMsg("谢谢，我收到了你的赞!记得常请我吃饭");
+		}
+		
 	}
 	
 	/**

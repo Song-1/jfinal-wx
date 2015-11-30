@@ -1,6 +1,8 @@
 package com.jfinal.weixin.demo;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jfinal.kit.PropKit;
 import com.jfinal.weixin.sdk.api.ApiConfig;
@@ -8,6 +10,7 @@ import com.jfinal.weixin.sdk.api.ApiResult;
 import com.jfinal.weixin.sdk.api.GroupsApi;
 import com.jfinal.weixin.sdk.api.MediaApi;
 import com.jfinal.weixin.sdk.api.MediaApi.MediaType;
+import com.jfinal.weixin.sdk.api.MediaArticles;
 import com.jfinal.weixin.sdk.api.MenuApi;
 import com.jfinal.weixin.sdk.api.UserApi;
 import com.jfinal.weixin.sdk.jfinal.ApiController;
@@ -107,15 +110,46 @@ public class WeixinApiController extends ApiController {
 	 * 新增其他类型永久素材
 	 */
 	public void addSucai(){
-	File file = new File("C:\\Users\\Administrator\\Music\\张靓颖 - 终于等到你.mp3");
+	File file = new File("D:\\sucai\\QQ图片20151127093548.jpg");
 	ApiResult apiResult = MediaApi.addMaterial(file);
+	renderText(apiResult.getJson());
+	}
+	/**
+	 * 新增图文永久素材
+	 */
+	public void addTuwenSucai(){
+	MediaArticles media = new MediaArticles();
+	media.setTitle("Happy Day");
+	media.setThumb_media_id("Lfmxj0RJO4G9WnVQ5CP04TmlQxnmvi9WQRskmZ9UaX0");
+	media.setDigest("快乐星期五");
+	media.setShow_cover_pic(true);
+	media.setContent("快乐每一天");
+	media.setAuthor("胡威");
+	media.setContent_source_url("www.xxtv.online");
+	List<MediaArticles> list = new ArrayList<MediaArticles>();
+	list.add(media);
+	ApiResult apiResult = MediaApi.addNews(list);
 	renderText(apiResult.getJson());
 	}
 	/**
 	 * 获取音频永久素材列表
 	 */
-	public void getSucai(){
+	public void getVoiceSucai(){
 	ApiResult apiResult = MediaApi.batchGetMaterial(MediaType.VOICE,0,10);
+	renderText(apiResult.getJson());
+	}
+	/**
+	 * 获取图片永久素材列表
+	 */
+	public void getImageSucai(){
+	ApiResult apiResult = MediaApi.batchGetMaterial(MediaType.IMAGE,0,10);
+	renderText(apiResult.getJson());
+	}
+	/**
+	 * 获取图文永久素材列表
+	 */
+	public void getNewsSucai(){
+	ApiResult apiResult = MediaApi.batchGetMaterial(MediaType.NEWS,0,10);
 	renderText(apiResult.getJson());
 	}
 	
